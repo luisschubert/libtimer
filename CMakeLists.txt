@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.11)
 
+include("${CMAKE_CURRENT_LIST_DIR}/packaging-helper.cmake")
+
 project(everest-timer
     VERSION 0.1
     DESCRIPTION "EVerest timer library"
@@ -51,15 +53,15 @@ if (TIMER_INSTALL)
         DIRECTORY include/
         TYPE INCLUDE
     )
-if (CUSTOM_CMAKE)
+# if (CUSTOM_CMAKE)
     evc_setup_package(
         NAME everest-timer
         EXPORT timer-targets
         NAMESPACE everest
-        ADDITIONAL_CONTENT
-            "find_dependency(Boost COMPONENTS system)"
+        # ADDITIONAL_CONTENT
+        #     "find_dependency(Boost COMPONENTS system)"
     )
-endif()
+# endif()
 endif()
 
 # build doxygen documentation if doxygen is available
