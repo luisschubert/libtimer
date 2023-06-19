@@ -6,23 +6,28 @@ project(everest-timer
     LANGUAGES CXX C
 )
 
-find_package(everest-cmake 0.1 REQUIRED
-    PATHS ../everest-cmake
-)
+# find_package(everest-cmake 0.1 REQUIRED
+#     PATHS ../everest-cmake
+# )
 
 # options
+option(CUSTOM_CMAKE "custom cmake" OFF)
 option(BUILD_EXAMPLES "Build examples" OFF)
-option(TIMER_INSTALL "Install the library (shared data might be installed anyway)" ${EVC_MAIN_PROJECT})
+option(TIMER_INSTALL "Install the library (shared data might be installed anyway)" ON)
 option(CMAKE_RUN_CLANG_TIDY "Run clang-tidy" OFF)
 
 # dependencies
 find_package(Boost COMPONENTS system REQUIRED)
 
+if (CUSTOM_CMAKE)
 if (NOT DISABLE_EDM)
     evc_setup_edm()
 
     # In EDM mode, we can't install exports (because the dependencies usually do not install their exports)
     set(TIMER_INSTALL OFF)
+else()
+    find_package(date REQUIRED)
+endif()
 else()
     find_package(date REQUIRED)
 endif()
@@ -46,7 +51,7 @@ if (TIMER_INSTALL)
         DIRECTORY include/
         TYPE INCLUDE
     )
-
+if (CUSTOM_CMAKE)
     evc_setup_package(
         NAME everest-timer
         EXPORT timer-targets
@@ -54,6 +59,7 @@ if (TIMER_INSTALL)
         ADDITIONAL_CONTENT
             "find_dependency(Boost COMPONENTS system)"
     )
+endif()
 endif()
 
 # build doxygen documentation if doxygen is available
